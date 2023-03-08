@@ -1,0 +1,132 @@
+version: "3.8"
+name: ${COMPOSE_PROJECT_NAME}
+
+services:
+
+    nginx:
+        depends_on:
+           - php
+           - node
+        container_name: ${COMPOSE_PROJECT_NAME}-nginx
+        build:
+            context: ./
+            target: ${PROJECT_MODE}
+            dockerfile: DockerFiles/Nginx/Dockerfile
+            args:
+                VERSION_NGINX: ${VERSION_NGINX}
+        image: ${COMPOSE_PROJECT_NAME}-nginx:${VERSION_NGINX}
+        env_file:
+            - .env
+        ports:
+            - ${PORT_NGINX_HOST}:${PORT_NGINX}
+        networks:
+            - proxy-net
+        volumes:
+            - ./php-src/adminer/:/var/www/html/adminer/
+            - ./php-src/debug/:/var/www/html/debug/
+        restart: always
+
+    php:
+        depends_on:
+           - postgres
+           - mysql
+        container_name: ${COMPOSE_PROJECT_NAME}-php
+        build:
+            context: ./
+            target: ${PROJECT_MODE}
+            dockerfile: DockerFiles/Php/Dockerfile
+            args:
+                VERSION_PHP: ${VERSION_PHP}
+                DOCKER_UID: ${DOCKER_UID}
+                DOCKER_GID: ${DOCKER_GID}
+                DOCKER_USER: ${DOCKER_USER}
+        image: ${COMPOSE_PROJECT_NAME}-php:${VERSION_PHP}
+        env_file:
+            - .env
+        expose:
+            - ${PORT_PHP}
+        networks:
+            - proxy-net
+        volumes:
+            - ./php-src/adminer/:/var/www/html/adminer/
+            - ./php-src/debug/:/var/www/html/debug/
+        restart: always
+
+    node:
+        depends_on:
+           - postgres
+           - mysql
+        container_name: ${COMPOSE_PROJECT_NAME}-node
+        build:
+            context: ./
+            target: ${PROJECT_MODE}
+            dockerfile: DockerFiles/Node/Dockerfile
+            args:
+                VERSION_NODE: ${VERSION_NODE}
+                DOCKER_UID: ${DOCKER_UID}
+                DOCKER_GID: ${DOCKER_GID}
+                DOCKER_USER: ${DOCKER_USER}
+        image: ${COMPOSE_PROJECT_NAME}-node:${VERSION_NODE}
+        env_file:
+            - .env
+        expose:
+            - ${PORT_NODE}
+        networks:
+            - proxy-net
+        volumes:
+            - ./node-src/:/srv/app/
+        restart: always
+
+    postgres:
+        container_name: ${COMPOSE_PROJECT_NAME}-db-postgres
+        build:
+            context: ./
+            target: ${PROJECT_MODE}
+            dockerfile: DockerFiles/Postgresql/Dockerfile
+            args:
+                VERSION_DB_POSTGRES: ${VERSION_DB_POSTGRES}
+        image: ${COMPOSE_PROJECT_NAME}-db-postgres:${VERSION_DB_POSTGRES}
+        env_file:
+            - .env
+            - DockerFiles/Postgresql/postgres.env
+        expose:
+            - ${PORT_DB_POSTGRES}
+        networks:
+            - proxy-net
+        volumes:
+            - db-postgress-volume:/var/lib/postgresql/data
+        restart: always
+
+    mysql:
+        container_name: ${COMPOSE_PROJECT_NAME}-db-mysql
+        build:
+            context: ./
+            target: ${PROJECT_MODE}
+            dockerfile: DockerFiles/Mysql/Dockerfile
+            args:
+                VERSION_DB_MYSQL: ${VERSION_DB_MYSQL}
+        image: ${COMPOSE_PROJECT_NAME}-db-mysql:${VERSION_DB_MYSQL}
+        env_file:
+            - .env
+            - DockerFiles/Mysql/mysql.env
+        expose:
+            - ${PORT_DB_MYSQL}
+        networks:
+            - proxy-net
+        volumes:
+            - db-mysql-volume:/var/lib/mysql/
+        restart: always
+
+networks:
+    proxy-net:
+      name: ${COMPOSE_PROJECT_NAME}-proxy-net
+      driver: bridge
+
+volumes:
+    db-postgress-volume:
+      name: ${COMPOSE_PROJECT_NAME}-db-postgress-volume
+      driver: local
+
+    db-mysql-volume:
+      name: ${COMPOSE_PROJECT_NAME}-db-mysql-volume
+      driver: local
