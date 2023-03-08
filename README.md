@@ -1,2 +1,12 @@
 # Base-Docker-Compose
-A docker-compose with multi-stage build base project for web full-stack application
+
+## README IN PROGRESS...
+
+
+## Description
+A docker-compose base project with multi-stage build for web full-stack application
+
+## Requirements 
+- docker-compose version >= 3.5
+
+## Usage
