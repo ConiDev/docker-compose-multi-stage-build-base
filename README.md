@@ -103,6 +103,12 @@ How to test this project ? Check the [Usage section](#usage)
 ### Stop project:
 - ```docker-compose down```
 
+### Endpoints:
+- ```https://localhost```   (You should see the Nginx welcome index)
+- ```https://localhost/debug``` (You should see the Php info)
+- ```https://localhost/adminer``` (You should see the adminer login page)
+- ```https://localhost/node``` (You should see the Nextjs welcome index)
+
 ## Note
 This Repo is an example project and should not be used directly for production deployment.
 
