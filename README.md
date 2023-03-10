@@ -91,8 +91,8 @@ How to test this project ? Check the [Usage section](#usage)
 
 ## Usage
 ### First time using this repo ?
-- ```git clone https://github.com/ConiDev/Base-Docker-Compose.git``` (download project)
-- ```cd Base-Docker-Compose``` (move to project folder)
+- ```git clone https://github.com/ConiDev/docker-compose-multi-stage-build-base.git``` (download project)
+- ```cd docker-compose-multi-stage-build-base``` (move to project folder)
 - ```cp .env.example .env``` (create .env file at root of folder)
 - ```cp DockerFiles/Mysql/mysql.env.example DockerFiles/Mysql/mysql.env``` (create mysql.env in Mysql folder)
 - ```cp DockerFiles/Postgresql/postgres.env.example DockerFiles/Postgresql/postgres.env``` (create postgres.env in Postgresql folder)
